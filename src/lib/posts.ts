@@ -8,6 +8,7 @@ import rehypeStringify from "rehype-stringify";
 import rehypePrism from "rehype-prism-plus";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeRaw from "rehype-raw";
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
@@ -37,7 +38,8 @@ export async function getPostData(id: string): Promise<PostData> {
 
   const processedContent = await unified()
     .use(remarkParse)
-    .use(remarkRehype)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
       behavior: "wrap",

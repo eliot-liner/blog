@@ -71,14 +71,14 @@ export default function Post({ postData }: PostProps) {
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mb-8">{postData.date}</p>
         <div
-          className="[&_h1]:text-4xl [&_h1]:font-extrabold [&_h1]:tracking-tight [&_h1]:mb-8 [&_h1]:text-gray-900 dark:[&_h1]:text-gray-100 [&_h1_.anchor]:text-gray-900 dark:[&_h1_.anchor]:text-gray-100
-                     [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:mb-6 [&_h2]:text-gray-800 dark:[&_h2]:text-gray-200 [&_h2_.anchor]:text-gray-800 dark:[&_h2_.anchor]:text-gray-200
-                     [&_h3]:text-2xl [&_h3]:font-bold [&_h3]:mb-4 [&_h3]:text-gray-800 dark:[&_h3]:text-gray-200 [&_h3_.anchor]:text-gray-800 dark:[&_h3_.anchor]:text-gray-200
-                     [&_h4]:text-xl [&_h4]:font-bold [&_h4]:mb-4 [&_h4]:text-gray-800 dark:[&_h4]:text-gray-200 [&_h4_.anchor]:text-gray-800 dark:[&_h4_.anchor]:text-gray-200
+          className="[&_h1]:text-4xl [&_h1]:font-extrabold [&_h1]:tracking-tight [&_h1]:mb-8 [&_h1]:mt-12 [&_h1]:text-gray-900 dark:[&_h1]:text-gray-100 [&_h1_.anchor]:text-gray-900 dark:[&_h1_.anchor]:text-gray-100
+                     [&_h2]:text-3xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:mb-6 [&_h2]:mt-10 [&_h2]:text-gray-800 dark:[&_h2]:text-gray-200 [&_h2_.anchor]:text-gray-800 dark:[&_h2_.anchor]:text-gray-200
+                     [&_h3]:text-2xl [&_h3]:font-bold [&_h3]:mb-4 [&_h3]:mt-8 [&_h3]:text-gray-800 dark:[&_h3]:text-gray-200 [&_h3_.anchor]:text-gray-800 dark:[&_h3_.anchor]:text-gray-200
+                     [&_h4]:text-xl [&_h4]:font-bold [&_h4]:mb-4 [&_h4]:mt-6 [&_h4]:text-gray-800 dark:[&_h4]:text-gray-200 [&_h4_.anchor]:text-gray-800 dark:[&_h4_.anchor]:text-gray-200
                      [&_p]:text-gray-700 dark:[&_p]:text-gray-300 [&_p]:text-base
                      [&_a]:text-blue-600 dark:[&_a]:text-blue-400
                      [&_strong]:text-gray-900 dark:[&_strong]:text-gray-100
-                     [&_code]:text-gray-900 dark:[&_code]:text-gray-100
+                     [&_code]:text-gray-900 dark:[&_code]:text-gray-100 [&_code]:bg-gray-100 dark:[&_code]:bg-gray-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono
                      [&_pre]:bg-gray-900 dark:[&_pre]:bg-gray-800
                      [&_pre]:text-gray-100
                      [&_blockquote]:border-l-blue-500
@@ -87,7 +87,8 @@ export default function Post({ postData }: PostProps) {
                      [&_li]:text-gray-700 dark:[&_li]:text-gray-300
                      [&_pre]:!bg-gray-900 [&_pre]:!p-4 [&_pre]:!rounded-lg [&_pre]:!my-4
                      [&_pre_code]:!bg-transparent [&_pre_code]:!p-0
-                     [&_.line-number]:!text-gray-500 [&_.line-number]:!mr-4 [&_.line-number]:!select-none"
+                     [&_.line-number]:!text-gray-500 [&_.line-number]:!mr-4 [&_.line-number]:!select-none
+                     [&_img]:mx-auto [&_img]:block [&_img]:my-8 [&_img]:rounded-lg [&_img]:shadow-lg"
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>
