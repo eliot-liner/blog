@@ -67,8 +67,6 @@ npm login
 npm publish --access=public
 ```
 
-배포가 성공하면, 이제 어디서든 이 패키지를 설치해서 사용할 수 있게 됩니다!
-
 ```terminal
 (base) josanghyeon@josanghyeon-ui-MacBookPro npm % npm publish --access=public
 npm notice
@@ -96,7 +94,7 @@ npm notice Publishing to https://registry.npmjs.org/ with tag latest and public 
 자, 이제 이 명령어 하나만 입력하면 방금 배포한 소스코드를 어디서든 설치해서 사용할 수 있습니다:
 
 ```bash
-npm install tomato-spoon
+npm install tomato-spoon@1.0.0
 ```
 
 [Source Code 링크](https://github.com/eliot-liner/npm/tree/8d9a247584ff0526fe6e1237d1b7ead1d72ef640)

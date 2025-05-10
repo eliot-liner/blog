@@ -9,6 +9,7 @@ import rehypePrism from "rehype-prism-plus";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeRaw from "rehype-raw";
+import rehypeCodeTitles from "rehype-code-titles";
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
@@ -47,6 +48,7 @@ export async function getPostData(id: string): Promise<PostData> {
         className: ["anchor"],
       },
     })
+    .use(rehypeCodeTitles)
     .use(rehypePrism, {
       ignoreMissing: true,
       showLineNumbers: true,

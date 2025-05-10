@@ -13,7 +13,7 @@ interface HomeProps {
 export default function Home({ posts }: HomeProps) {
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">블로그</h1>
+      <h1 className="text-4xl font-bold mb-8">조상현 블로그</h1>
       <div className="space-y-4">
         {posts.map((post) => (
           <article key={post.id} className="border-b pb-4">

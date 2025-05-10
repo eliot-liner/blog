@@ -79,16 +79,9 @@ export default function Post({ postData }: PostProps) {
                      [&_a]:text-blue-600 dark:[&_a]:text-blue-400
                      [&_strong]:text-gray-900 dark:[&_strong]:text-gray-100
                      [&_code]:text-gray-900 dark:[&_code]:text-gray-100 [&_code]:bg-gray-100 dark:[&_code]:bg-gray-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono
-                     [&_pre]:bg-gray-900 dark:[&_pre]:bg-gray-800
-                     [&_pre]:text-gray-100
-                     [&_blockquote]:border-l-blue-500
-                     [&_blockquote]:bg-gray-50 dark:[&_blockquote]:bg-gray-800/50
-                     [&_blockquote]:py-1
-                     [&_li]:text-gray-700 dark:[&_li]:text-gray-300
-                     [&_pre]:!bg-gray-900 [&_pre]:!p-4 [&_pre]:!rounded-lg [&_pre]:!my-4
-                     [&_pre_code]:!bg-transparent [&_pre_code]:!p-0
-                     [&_.line-number]:!text-gray-500 [&_.line-number]:!mr-4 [&_.line-number]:!select-none
-                     [&_img]:mx-auto [&_img]:block [&_img]:my-8 [&_img]:rounded-lg [&_img]:shadow-lg"
+                     [&_pre]:!bg-gray-900 dark:[&_pre]:!bg-gray-800 [&_pre]:!p-4 [&_pre]:!rounded-lg
+                     [&_.rehype-code-title]:!bg-gray-900 dark:[&_.rehype-code-title]:!bg-gray-800 [&_.rehype-code-title]:!text-gray-300 [&_.rehype-code-title]:!px-4 [&_.rehype-code-title]:!py-2 [&_.rehype-code-title]:!text-sm [&_.rehype-code-title]:!font-mono [&_.rehype-code-title]:!rounded-t-lg [&_.rehype-code-title]:!border-b [&_.rehype-code-title]:!border-gray-700 [&_.rehype-code-title]:!mb-0 [&_.rehype-code-title]:!mt-0
+                     [&_.rehype-code-title+pre]:!rounded-t-none [&_.rehype-code-title+pre]:!rounded-b-lg"
           dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
         />
       </article>

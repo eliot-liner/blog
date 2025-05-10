@@ -118,3 +118,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+.rehype-code-title + pre {
+  margin-top: 0 !important;
+}
+
+.rehype-code-title {
+  margin-top: 20px !important;
+}
+
+p {
+  margin-bottom: 10px;
+}
