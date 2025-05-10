@@ -79,5 +79,9 @@ export function getAllPosts() {
     };
   });
 
-  return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1));
+  return allPostsData.sort((a, b) => {
+    const numA = Number((a.title.match(/\((\d+)장\)/) || [])[1] || 0);
+    const numB = Number((b.title.match(/\((\d+)장\)/) || [])[1] || 0);
+    return numA - numB;
+  });
 }
