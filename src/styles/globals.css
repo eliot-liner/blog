@@ -130,3 +130,74 @@
 p {
   margin-bottom: 10px;
 }
+
+/* 리스트 공통 스타일 */
+ul,
+ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+ul > li,
+ol > li {
+  margin: 0.5rem 0;
+  position: relative;
+}
+
+/* 일반 리스트 스타일 */
+ul {
+  list-style-type: none;
+}
+
+ul > li::before {
+  content: "•";
+  position: absolute;
+  left: -1rem;
+  color: var(--muted-foreground);
+}
+
+/* 중첩된 일반 리스트 스타일 */
+ul ul {
+  margin: 0.5rem 0;
+}
+
+ul ul > li::before {
+  content: "◦";
+}
+
+ul ul ul > li::before {
+  content: "▪";
+}
+
+/* 숫자 리스트 스타일 */
+ol {
+  counter-reset: item;
+  list-style-type: none;
+}
+
+ol > li {
+  counter-increment: item;
+}
+
+ol > li::before {
+  content: counter(item) ".";
+  position: absolute;
+  left: -1.5rem;
+  width: 1.5rem;
+  text-align: right;
+  color: var(--muted-foreground);
+}
+
+/* 중첩된 숫자 리스트 스타일 */
+ol ol {
+  counter-reset: subitem;
+  margin: 0.5rem 0;
+}
+
+ol ol > li {
+  counter-increment: subitem;
+}
+
+ol ol > li::before {
+  content: counter(item) "." counter(subitem) ".";
+}

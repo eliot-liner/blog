@@ -33,7 +33,7 @@ npm uninstall esbuild
 npm install tsup typescript -D
 ```
 
-```
+```terminal
 tsup src/index.ts src/cli.ts
 ```
 
@@ -60,4 +60,4 @@ tsup src/index.ts src/cli.ts
 }
 ```
 
-이렇게 변경하고 배포한다면, 끝이다.
+이렇게 변경하고 배포한다면, 이제 module은 Typescript를 지원합니다.

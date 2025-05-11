@@ -1,0 +1,112 @@
+---
+title: "[Liner] 다크모드에서 이미지 깜빡임 현상 해결기"
+date: "2024-05-11"
+---
+
+다크모드와 라이트모드에서는 보통 서로 다른 이미지 Asset을 사용합니다.
+
+<img src="/images/4.png" alt="NPM 화면" />
+
+Liner에서도 각 모드에 맞춰 이미지를 다르게 렌더링했지만, 아래와 같은 문제가 발생했습니다.
+
+<video controls width="100%">
+  <source src="/videos/AS-IS.mp4" type="video/mp4" />
+  브라우저가 비디오 태그를 지원하지 않습니다.
+</video>
+
+## 문제 정의
+
+- 다크모드일 때
+  - 초기 렌더링 시 이미지가 깜빡이는 현상이 발생
+  - 라이트모드용 이미지 Asset도 요청됨
+
+## 원인 분석
+
+CSS에서는 `html` 태그의 `data` attribute를 기준으로 다크모드를 처리하기 때문에 SSR 환경에서도 별 문제가 없었습니다.
+
+```css
+:root[color-theme="light"] {
+  ...;
+}
+:root[color-theme="dark"] {
+  ...;
+}
+```
+
+하지만 이미지 Asset은 React Hook을 통해 조건부로 렌더링하고 있었습니다.
+다크모드 여부는 Recoil 상태로 관리되는 `isDarkMode` 값을 사용했습니다.
+
+```jsx
+const { isDarkMode } = useDarkMode();
+
+<img src={isDarkMode ? "dark-image.jpg" : "light-image.jpg"} />;
+```
+
+이 상태는 `useLayoutEffect`를 통해 HTML의 `data-theme` attribute를 기반으로 설정되었기 때문에, 첫 렌더링 시에는 정확한 테마 정보를 갖고 있지 않아 깜빡임이 발생했던 겁니다.
+
+## 해결 과정
+
+처음에는 `<picture>`와 `<source>` 태그를 활용해 해결하려고 했습니다.
+
+하지만 이 방식은 `(prefers-color-scheme: dark)`와 같은 **브라우저의 전역 설정**만을 참조할 수 있고, HTML의 `data-theme`와는 별개였습니다.
+사용자가 사이트마다 다른 테마를 선택할 수 있어야 하기 때문에 이 방법은 제외했습니다.
+
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="dark-image.jpg" />
+  <img src="image.jpg" alt="An example image" />
+</picture>
+```
+
+그러다 [`next-theme`](https://github.com/pacocoursey/next-themes?tab=readme-ov-file#css)에서 유사한 문제를 어떻게 해결했는지를 확인하게 되었고, 좋은 방식을 발견했습니다.
+
+```jsx
+function ThemedImage() {
+  return (
+    <>
+      {/* 다크모드일 때는 이 요소를 숨김 */}
+      <Image
+        src="light.png"
+        width={400}
+        height={400}
+        data-hide-on-theme="dark"
+      />
+
+      {/* 라이트모드일 때는 이 요소를 숨김 */}
+      <Image
+        src="dark.png"
+        width={400}
+        height={400}
+        data-hide-on-theme="light"
+      />
+    </>
+  );
+}
+```
+
+```css
+[data-theme="dark"] [data-hide-on-theme="dark"],
+[data-theme="light"] [data-hide-on-theme="light"] {
+  display: none;
+}
+```
+
+이 방식은 첫 렌더링부터 정확한 이미지를 보여줄 수 있습니다.
+Lazy Loading 설정까지 적용하면 불필요한 네트워크 요청 없이 원하는 테마에 맞는 이미지만 로드됩니다.
+
+TO-BE:
+
+<video controls width="100%">
+  <source src="/videos/TO-BE.mp4" type="video/mp4" />
+  브라우저가 비디오 태그를 지원하지 않습니다.
+</video>
+
+## 마무리
+
+해당 방식의 장점은 다음과 같습니다.
+
+- 새로고침 시 Light Asset이 잠깐 노출되던 깜빡임 현상 해결
+- 다크모드 이미지의 네트워크 요청을 절반 수준으로 줄일 수 있음
+
+추가로, `next-theme` 타입 정의에 문제가 하나 있어 [PR](https://github.com/pacocoursey/next-themes/pull/356)도 올렸습니다.
+아쉽게도 유지관리가 활발하진 않아 머지 여부는 불확실하네요.

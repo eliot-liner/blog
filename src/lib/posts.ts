@@ -10,6 +10,10 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeRaw from "rehype-raw";
 import rehypeCodeTitles from "rehype-code-titles";
+import { remark } from "remark";
+import html from "remark-html";
+import remarkGfm from "remark-gfm";
+import remarkPrism from "remark-prism";
 
 const postsDirectory = path.join(process.cwd(), "src/content/posts");
 
@@ -39,6 +43,8 @@ export async function getPostData(id: string): Promise<PostData> {
 
   const processedContent = await unified()
     .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkPrism)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSlug)
@@ -49,10 +55,6 @@ export async function getPostData(id: string): Promise<PostData> {
       },
     })
     .use(rehypeCodeTitles)
-    .use(rehypePrism, {
-      ignoreMissing: true,
-      showLineNumbers: true,
-    })
     .use(rehypeStringify)
     .process(matterResult.content);
 
