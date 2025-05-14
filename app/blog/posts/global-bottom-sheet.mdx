@@ -129,22 +129,15 @@ export const useGlobalBottomSheet = () => {
   };
 
   const pushBottomSheet: BottomSheetFunction = (key, props) => {
-    try {
-      setBottomSheetState((prev) => {
-        const bottomSheet = { name: key, props };
+    setBottomSheetState((prev) => {
+      const bottomSheet = { name: key, props };
 
-        if (
-          prev.length > 0 &&
-          isDeepEqual(prev[prev.length - 1], bottomSheet)
-        ) {
-          return prev;
-        }
+      if (prev.length > 0 && isDeepEqual(prev[prev.length - 1], bottomSheet)) {
+        return prev;
+      }
 
-        return [...prev, bottomSheet];
-      });
-    } catch (error) {
-      console.error(error);
-    }
+      return [...prev, bottomSheet];
+    });
   };
 
   const popBottomSheet = () => {
