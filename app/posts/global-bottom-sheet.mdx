@@ -1,0 +1,166 @@
+---
+title: "[Liner] React Native 전역 BottomSheet 구현 과정"
+publishedAt: "2025-05-14"
+---
+
+## 문제 정의
+
+BottomSheet가 FlatList(map) 내부에 있다면 프레임이 떨어지는 현상이 발생했습니다.
+
+그래서 DOM 트리(DOM 트리는 아니지만 어쨋든…) 상단에서 BottomSheet를 관리하면 이 문제가 해결될 것이라고 생각합니다.
+
+## 해결 과정
+
+- https://github.com/gorhom/react-native-bottom-sheet
+
+Liner Mobile에서는 이 라이브러리를 사용 중이였는데, 이 라이브러리는 마운트한 뒤 ref로 추가적인 관리가 필요했습니다.
+
+다행히도 BottomSheet 라이브러리에 onDismiss 콜백이 남아있었습니다.
+
+```tsx
+<BottomSheetModal onDismiss={onDismissCallback}>{...}</BottomSheetModal>
+```
+
+1. queue에 요청 추가 (name, props)
+2. queue watcher에서 BottomSheet 컴포넌트 마운트
+3. ref.present() 통해서 실제 BottomSheet 호출
+   1. BottomSheet가 Dismiss된다면
+      1. BottomSheet의 onDismiss Callback에서 queue pop();
+4. queue가 남아있다면 2번부터 반복
+
+```jsx
+import { TestBottomSheet } from '@/components';
+
+export const globalBottomSheets = {
+  TestBottomSheet
+} as const;
+```
+
+```tsx
+import { useEffect, useRef } from "react";
+
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+
+import { globalBottomSheets } from "../constants/modal";
+import { useGlobalBottomSheet } from "../hooks/useGlobalBottomSheet";
+
+export type BottomSheetType<
+  T extends keyof typeof globalBottomSheets = keyof typeof globalBottomSheets
+> = {
+  name: T | null;
+  props?: Omit<
+    Parameters<(typeof globalBottomSheets)[T]>[0],
+    "bottomSheetModalRef"
+  >;
+};
+
+interface IProps extends BottomSheetType {
+  bottomSheetQueueLength: number;
+}
+
+const GlobalBottomSheetCondition = ({
+  name,
+  props,
+  bottomSheetQueueLength,
+}: IProps) => {
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  useEffect(() => {
+    bottomSheetModalRef.current?.present();
+  }, [bottomSheetQueueLength]);
+
+  const Component = globalBottomSheets[name!];
+
+  // @ts-ignore
+  return <Component bottomSheetModalRef={bottomSheetModalRef} {...props} />;
+};
+
+export const GlobalBottomSheet = () => {
+  const { currentBottomSheet, bottomSheetQueueLength } = useGlobalBottomSheet();
+
+  if (!currentBottomSheet.name) {
+    return null;
+  }
+
+  return (
+    <GlobalBottomSheetCondition
+      {...currentBottomSheet}
+      bottomSheetQueueLength={bottomSheetQueueLength}
+    />
+  );
+};
+```
+
+```tsx
+import { atom, useRecoilState } from "recoil";
+
+import { globalBottomSheets } from "../constants/modal";
+import { useBottomSheetModal } from "@gorhom/bottom-sheet";
+import { Keyboard } from "react-native";
+import { isDeepEqual } from "remeda";
+import { BottomSheetType } from "../components";
+
+type GlobalBottomSheetsKey = keyof typeof globalBottomSheets;
+
+const bottomSheetClientStore = atom<BottomSheetType[]>({
+  key: "bottomSheetClientStore",
+  default: [],
+});
+
+type BottomSheetFunction = <T extends GlobalBottomSheetsKey>(
+  key: T,
+  props: Omit<
+    Parameters<(typeof globalBottomSheets)[T]>[0],
+    "bottomSheetModalRef"
+  >
+) => void;
+
+export const useGlobalBottomSheet = () => {
+  const [bottomSheetState, setBottomSheetState] = useRecoilState(
+    bottomSheetClientStore
+  );
+  const bottomSheetModal = useBottomSheetModal();
+
+  const openBottomSheet: BottomSheetFunction = (key, props) => {
+    bottomSheetModal.dismiss();
+    Keyboard.dismiss();
+
+    pushBottomSheet(key, props);
+  };
+
+  const pushBottomSheet: BottomSheetFunction = (key, props) => {
+    setBottomSheetState((prev) => {
+      const bottomSheet = { name: key, props };
+
+      if (prev.length > 0 && isDeepEqual(prev[prev.length - 1], bottomSheet)) {
+        return prev;
+      }
+
+      return [...prev, bottomSheet];
+    });
+  };
+
+  const popBottomSheet = () => {
+    setBottomSheetState((prev) => prev.slice(1));
+  };
+
+  const currentBottomSheet = bottomSheetState[0] || { name: null };
+
+  const bottomSheetQueueLength = bottomSheetState.length;
+
+  return {
+    openBottomSheet,
+    popBottomSheet,
+    currentBottomSheet,
+    bottomSheetQueueLength,
+  };
+};
+```
+
+## 결과
+
+-
+
+## 마무리
+
+- 나이스

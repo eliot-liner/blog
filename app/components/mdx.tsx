@@ -9,6 +9,7 @@ function Table({ data }) {
   const headers = data.headers.map((header, index) => (
     <th key={index}>{header}</th>
   ));
+
   const rows = data.rows.map((row, index) => (
     <tr key={index}>
       {row.map((cell, cellIndex) => (

@@ -1,3 +1,7 @@
 pre:not(:has(+ p)) {
   margin-bottom: var(--spacing-4, 1rem);
 }
+
+img {
+  margin: 0 auto !important;
+}
