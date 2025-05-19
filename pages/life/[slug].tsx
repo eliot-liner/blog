@@ -201,17 +201,6 @@ export default ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = getBlogPosts();
-
-  return {
-    paths: posts.map((post) => ({
-      params: { slug: post.slug },
-    })),
-    fallback: false,
-  };
-};
-
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const posts = getBlogPosts();
   const post = posts.find((post) => post.slug === params?.slug);
@@ -222,5 +211,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       slug: params?.slug,
       post: { ...post, content: await serialize(post?.content || "") },
     },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = getBlogPosts("life");
+
+  return {
+    paths: posts.map((post) => ({
+      params: { slug: post.slug },
+    })),
+    fallback: false,
   };
 };

@@ -201,17 +201,6 @@ export default ({
   );
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const posts = getBlogPosts();
-
-  return {
-    paths: posts.map((post) => ({
-      params: { slug: post.slug },
-    })),
-    fallback: false,
-  };
-};
-
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const posts = getBlogPosts();
   const post = posts.find((post) => post.slug === params?.slug);
