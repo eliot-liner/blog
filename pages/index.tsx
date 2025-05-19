@@ -31,9 +31,6 @@ export default () => {
               </p>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className="px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full">
-                JavaScript
-              </span>
               <span className="px-3 py-1 text-sm bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
                 React Native
               </span>
@@ -56,6 +53,64 @@ export default () => {
               <span>생성형 AI 서비스 개발</span>
             </li>
           </ul>
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-xl font-semibold mb-6">Open Source</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <a
+            href="https://github.com/vercel/next.js/pull/50136"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200"
+          >
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                  <svg
+                    className="w-4 h-4 text-gray-600 dark:text-gray-300"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-base font-medium text-gray-900 dark:text-gray-100">
+                      Next.js
+                    </h3>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                      2023.05
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+                    makeDir 함수 개선
+                  </p>
+                </div>
+              </div>
+              <svg
+                className="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </div>
+          </a>
         </div>
       </section>
 
