@@ -1,5 +1,7 @@
-import { BlogPosts } from "app/components/posts";
-import { Navbar } from "app/nav";
+import { BlogPosts } from "components/posts";
+import { Navbar } from "components/nav";
+import { PostType } from "../utils/utils";
+import { useRouter } from "next/router";
 
 const CATEGORIES = [
   "All",
@@ -10,8 +12,9 @@ const CATEGORIES = [
   "Deploy",
 ];
 
-export default function Page({ searchParams }) {
-  const category = searchParams?.category || "all";
+export const Blog = (props: { posts: PostType[] }) => {
+  const { query } = useRouter();
+  const category = query.category || "all";
 
   return (
     <section>
@@ -38,7 +41,13 @@ export default function Page({ searchParams }) {
         </div>
       </div>
 
-      <BlogPosts additionalPath={category === "all" ? undefined : category} />
+      <BlogPosts
+        posts={
+          category === "all"
+            ? props.posts
+            : props.posts.filter((post) => post.tag === category)
+        }
+      />
     </section>
   );
-}
+};

@@ -1,63 +1,64 @@
-import { notFound } from "next/navigation";
-import { CustomMDX } from "app/components/mdx";
-import { formatDate, getBlogPosts } from "app/utils";
-import { baseUrl } from "app/sitemap";
+import { CustomMDX } from "components/mdx";
+import { getBlogPosts, PostType } from "utils/utils";
 import Link from "next/link";
-import { sortDate } from "app/components/posts";
+import { formatDate, sortDate } from "utils/date";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { serialize } from "next-mdx-remote/serialize";
 
-export async function generateStaticParams() {
-  const posts = getBlogPosts();
+// export async function generateStaticParams() {
+//   const posts = getBlogPosts();
 
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
-}
+//   return posts.map((post) => ({
+//     slug: post.slug,
+//   }));
+// }
 
-export function generateMetadata({ params }) {
-  const post = getBlogPosts().find((post) => post.slug === params.slug);
-  if (!post) {
-    return;
-  }
+// export function generateMetadata({ params }) {
+//   const post = getBlogPosts().find((post) => post.slug === params.slug);
+//   if (!post) {
+//     return;
+//   }
 
-  const { title, publishedAt: publishedTime, image } = post.metadata;
-  const ogImage = image
-    ? image
-    : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
+//   const { title, publishedAt: publishedTime, image } = post.metadata;
+//   const ogImage = image
+//     ? image
+//     : `${baseUrl}/og?title=${encodeURIComponent(title)}`;
 
-  return {
-    title,
-    openGraph: {
-      title,
-      type: "article",
-      publishedTime,
-      url: `${baseUrl}/blog/${post.slug}`,
-      images: [
-        {
-          url: ogImage,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      images: [ogImage],
-    },
-  };
-}
+//   return {
+//     title,
+//     openGraph: {
+//       title,
+//       type: "article",
+//       publishedTime,
+//       url: `${baseUrl}/blog/${post.slug}`,
+//       images: [
+//         {
+//           url: ogImage,
+//         },
+//       ],
+//     },
+//     twitter: {
+//       card: "summary_large_image",
+//       title,
+//       images: [ogImage],
+//     },
+//   };
+// }
 
-export default function Blog({ params }) {
-  const posts = getBlogPosts();
-  const post = posts.find((post) => post.slug === params.slug);
-
-  if (!post) {
-    notFound();
-  }
-
+export default ({
+  posts,
+  slug,
+  post,
+}: {
+  posts: PostType[];
+  slug: string;
+  post: PostType;
+}) => {
   // 날짜순으로 정렬된 포스트 목록 생성 (최신순)
   const sortedPosts = posts.sort(sortDate);
 
   // 현재 포스트의 인덱스 찾기
-  const currentIndex = sortedPosts.findIndex((p) => p.slug === params.slug);
+  const currentIndex = sortedPosts.findIndex((p) => p.slug === slug);
 
   // 이전글과 다음글 가져오기 (이전글은 더 최신 글, 다음글은 더 오래된 글)
   const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
@@ -68,7 +69,7 @@ export default function Blog({ params }) {
 
   return (
     <section>
-      <script
+      {/* <script
         type="application/ld+json"
         suppressHydrationWarning
         dangerouslySetInnerHTML={{
@@ -89,7 +90,7 @@ export default function Blog({ params }) {
             },
           }),
         }}
-      />
+      /> */}
 
       <Link
         href="/"
@@ -118,17 +119,17 @@ export default function Blog({ params }) {
           {formatDate(post.metadata.publishedAt)}
         </p>
       </div>
-      <article className="prose">
+      <article className="prose markdown">
         <CustomMDX source={post.content} />
       </article>
 
-      <div className="mt-12 pt-6 border-t border-neutral-200 dark:border-neutral-800">
+      <div className="mt-12 mb-8 pt-6 border-t border-neutral-200 dark:border-neutral-800">
         <div className="flex flex-col sm:flex-row justify-between gap-4">
           {/* 이전 글 (더 최신 글) */}
           <div className="w-full sm:w-1/2">
             {prevPost ? (
               <Link
-                href={`/${prevPost.slug}`}
+                href={`/${prevPost.tag}/${prevPost.slug}`}
                 className="flex flex-col p-4 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
               >
                 <span className="text-sm text-neutral-500 dark:text-neutral-400 mb-1">
@@ -155,7 +156,7 @@ export default function Blog({ params }) {
           <div className="w-full sm:w-1/2">
             {nextPost ? (
               <Link
-                href={`/${nextPost.slug}`}
+                href={`/${nextPost.tag}/${nextPost.slug}`}
                 className="flex flex-col p-4 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
               >
                 <span className="text-sm text-neutral-500 dark:text-neutral-400 mb-1">
@@ -179,6 +180,47 @@ export default function Blog({ params }) {
           </div>
         </div>
       </div>
+
+      <script
+        src="https://giscus.app/client.js"
+        data-repo="eliot-liner/blog"
+        data-repo-id="R_kgDOOnPA7Q"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOOnPA7c4Cp-yS"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="ko"
+        crossOrigin="anonymous"
+        async
+      ></script>
     </section>
   );
-}
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = getBlogPosts();
+
+  return {
+    paths: posts.map((post) => ({
+      params: { slug: post.slug },
+    })),
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const posts = getBlogPosts();
+  const post = posts.find((post) => post.slug === params?.slug);
+
+  return {
+    props: {
+      posts,
+      slug: params?.slug,
+      post: { ...post, content: await serialize(post?.content || "") },
+    },
+  };
+};

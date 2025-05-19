@@ -1,9 +1,9 @@
+import { serialize } from "next-mdx-remote/serialize";
 import Link from "next/link";
 import Image from "next/image";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { MDXRemote } from "next-mdx-remote";
 import { highlight } from "sugar-high";
 import React from "react";
-import "./style.css";
 
 function Table({ data }) {
   const headers = data.headers.map((header, index) => (
@@ -104,8 +104,20 @@ const components = {
 export function CustomMDX(props) {
   return (
     <MDXRemote
-      {...props}
-      components={{ ...components, ...(props.components || {}) }}
+      {...props.source}
+      components={{
+        h1: createHeading(1),
+        h2: createHeading(2),
+        h3: createHeading(3),
+        h4: createHeading(4),
+        h5: createHeading(5),
+        h6: createHeading(6),
+        Image: RoundedImage,
+        a: CustomLink,
+        code: Code,
+        Table,
+      }}
+      // ...(props.components || {})
     />
   );
 }

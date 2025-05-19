@@ -1,28 +1,21 @@
 import Link from "next/link";
-import { formatDate, getBlogPosts } from "app/utils";
-
-export const sortDate = (a, b) => {
-  if (new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)) {
-    return -1;
-  }
-  return 1;
-};
+import { PostType } from "utils/utils";
+import { formatDate } from "utils/date";
+import { sortDate } from "utils/date";
 
 interface PostProps {
-  additionalPath?: string;
+  posts: PostType[];
 }
 
-export function BlogPosts({ additionalPath }: PostProps) {
-  const allBlogs = getBlogPosts(additionalPath);
-
+export function BlogPosts({ posts }: PostProps) {
   return (
     <div className="my-8">
       <div className="flex flex-col space-y-4">
-        {allBlogs.sort(sortDate).map((post) => (
+        {posts.sort(sortDate).map((post) => (
           <Link
             key={post.slug}
             className="flex flex-col p-4 border border-neutral-200 dark:border-neutral-800 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors"
-            href={`/${post.slug}`}
+            href={`/${post.tag}/${post.slug}`}
           >
             <div className="w-full flex flex-col space-y-2">
               <div className="flex flex-row items-center space-x-2">
