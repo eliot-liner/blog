@@ -81,6 +81,8 @@ html {
 .prose img {
   /* Don't apply styles to next/image */
   @apply m-0;
+
+  margin: 0 auto !important;
 }
 
 .prose p {
@@ -108,11 +110,19 @@ html {
 }
 
 .prose ul {
-  @apply list-disc pl-6;
+  @apply list-disc pl-6 space-y-2 my-4;
 }
 
 .prose ol {
-  @apply list-decimal pl-6;
+  @apply list-decimal pl-6 space-y-2 my-4;
+}
+
+.prose li {
+  @apply text-neutral-800 dark:text-neutral-200;
+}
+
+.prose li::marker {
+  @apply text-neutral-500 dark:text-neutral-400;
 }
 
 .prose > :first-child {
@@ -147,4 +157,9 @@ table {
 
 .title {
   text-wrap: balance;
+}
+
+/* custom */
+pre:not(:has(+ p)) {
+  margin-bottom: var(--spacing-4, 1rem);
 }

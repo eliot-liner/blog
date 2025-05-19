@@ -15,7 +15,9 @@ export default function Document() {
         // GeistMono.variable
       )}
     >
-      <Head />
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <body className="antialiased max-w-xl mx-4 mt-8 lg:mx-auto">
         <Main />
         <NextScript />

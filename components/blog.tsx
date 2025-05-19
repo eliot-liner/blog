@@ -12,7 +12,7 @@ const CATEGORIES = [
   "Deploy",
 ];
 
-export const Blog = (props: { posts: PostType[] }) => {
+const Blog = (props: { posts: PostType[] }) => {
   const { query } = useRouter();
   const category = query.category || "all";
 
@@ -51,3 +51,5 @@ export const Blog = (props: { posts: PostType[] }) => {
     </section>
   );
 };
+
+export default Blog;
